@@ -239,7 +239,6 @@ void StartSyncCPU (void ) {
 	Start_x86_Log();
 #endif
 
-	if (AiRomOpen != NULL) { AiRomOpen(); }
 	if (GfxRomOpen != NULL) { GfxRomOpen(); }
 	if (ContRomOpen != NULL) { ContRomOpen(); }
 	ResetRecompCode();

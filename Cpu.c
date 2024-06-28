@@ -854,7 +854,6 @@ BOOL Machine_LoadState(void) {
 	if (AiRomClosed != NULL)   { AiRomClosed(); }
 	if (ContRomClosed != NULL) { ContRomClosed(); }
 	if (RSPRomClosed) { RSPRomClosed(); }
-	if (AiRomOpen != NULL) { AiRomOpen(); }
 	if (GfxRomOpen != NULL) { GfxRomOpen(); }
 	if (ContRomOpen != NULL) { ContRomOpen(); }	
 	DlistCount = 0;
