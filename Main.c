@@ -1085,7 +1085,7 @@ LRESULT CALLBACK Main_Proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 				SendMessage(hMainWindow,WM_COMMAND,ID_OPTIONS_FULLSCREEN,0);
 				CPU_Paused = FALSE;
 			}
-			CloseCpu();
+			CloseCpu(0 /*will reinit*/);
 			hMenu = GetMenu(hMainWindow);
 			EnableMenuItem(hMenu,ID_FILE_STARTEMULATION,MFS_ENABLED|MF_BYCOMMAND);
 			if (DrawScreen != NULL) { DrawScreen(); }
@@ -1098,7 +1098,6 @@ LRESULT CALLBACK Main_Proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		case ID_FILE_REFRESHROMLIST: RefreshRomBrowser(); break;
 		case ID_FILE_EXIT: DestroyWindow(hWnd);	break;
 		case ID_CPU_RESET:
-			CloseCpu();
 			StartEmulation();
 			break;
 		case ID_CPU_PAUSE: ManualPaused = TRUE; PauseCpu(); break;
@@ -1646,6 +1645,18 @@ LRESULT CALLBACK Main_Proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			SaveRomBrowserColoumnInfo();
 		PostQuitMessage(0);
 		break;
+
+case WM_DROPFILES: {
+			HDROP hDrop = (HDROP)wParam;
+                        DWORD ThreadID;
+
+			DragQueryFile(hDrop, 0, CurrentFileName, sizeof(CurrentFileName));
+			DragFinish(hDrop);
+
+			CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)OpenChosenFile, NULL, 0, &ThreadID);
+			break;
+		}
+
 	default:
 		return DefWindowProc(hWnd,uMsg,wParam,lParam);
 	}
@@ -2255,7 +2266,7 @@ void UninstallApplication(HWND hWnd) {
 
 
 void ShutdownApplication ( void ) {
-	CloseCpu();
+	CloseCpu(0 /*will reinit*/);
 	if (TargetInfo != NULL) { VirtualFree(TargetInfo,0,MEM_RELEASE); }
 	FreeRomBrowser();
 	ShutdownPlugins();
@@ -2367,6 +2378,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs,
 		WS_CLIPSIBLINGS | WS_SYSMENU | WS_MINIMIZEBOX,X,Y,WindowWidth,WindowHeight,
 		NULL,NULL,hInst,NULL
 	);
+
+        DragAcceptFiles(hMainWindow, TRUE);
 
 	if ( !hMainWindow ) { return FALSE; }
 	if (strlen(lpszArgs) > 0) {

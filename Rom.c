@@ -800,8 +800,7 @@ void OpenChosenFile ( void ) {
 		}
 		DrawMenuBar(hMainWindow);
 	}
-	Sleep(1000);
-	CloseCpu();
+	CloseCpu(1 /*will reinit*/);
 #if (!defined(EXTERNAL_RELEASE))
 	ResetMappings();
 #endif
@@ -857,7 +856,6 @@ void OpenChosenFile ( void ) {
 					len += unzReadCurrentFile(file,&ROM[count],ReadFromRomSection);
 					sprintf(Message,"%s: %.2f%c",GS(MSG_LOADED),((float)len/(float)RomFileSize) * 100.0f,'%');
 					SendMessage( hStatusWnd, SB_SETTEXT, 0, (LPARAM)Message );
-					Sleep(100);
 				}
 				if ((int)RomFileSize != len) {
 					unzCloseCurrentFile(file);
@@ -960,7 +958,6 @@ void OpenChosenFile ( void ) {
 			TotalRead += dwRead;
 			sprintf(Message,"%s: %.2f%c",GS(MSG_LOADED),((float)TotalRead/(float)RomFileSize) * 100.0f,'%');
 			SendMessage( hStatusWnd, SB_SETTEXT, 0, (LPARAM)Message );
-			Sleep(100);
 		}
 		dwRead = TotalRead;
 
@@ -1051,7 +1048,6 @@ void OpenChosenFile ( void ) {
 	SendMessage( hStatusWnd, SB_SETTEXT, 0, (LPARAM)WinTitle );
 	if (AutoStart) {
 		StartEmulation();
-		Sleep(100);
 		if (AutoFullScreen) {
 			char Status[100], Identifier[100], result[100];
 

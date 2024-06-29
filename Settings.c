@@ -686,7 +686,7 @@ BOOL CALLBACK PluginSelectProc (HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPar
 			}
 			RegCloseKey(hKeyResults);
 			if (CPURunning) { 
-				CloseCpu();
+				CloseCpu(0 /*will reinit*/);
 				ShutdownPlugins();
 				SetupPlugins(hMainWindow);				
 				StartEmulation();
