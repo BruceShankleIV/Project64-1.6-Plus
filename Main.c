@@ -1645,18 +1645,6 @@ LRESULT CALLBACK Main_Proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			SaveRomBrowserColoumnInfo();
 		PostQuitMessage(0);
 		break;
-
-case WM_DROPFILES: {
-			HDROP hDrop = (HDROP)wParam;
-                        DWORD ThreadID;
-
-			DragQueryFile(hDrop, 0, CurrentFileName, sizeof(CurrentFileName));
-			DragFinish(hDrop);
-
-			CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)OpenChosenFile, NULL, 0, &ThreadID);
-			break;
-		}
-
 	default:
 		return DefWindowProc(hWnd,uMsg,wParam,lParam);
 	}
@@ -2378,8 +2366,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszArgs,
 		WS_CLIPSIBLINGS | WS_SYSMENU | WS_MINIMIZEBOX,X,Y,WindowWidth,WindowHeight,
 		NULL,NULL,hInst,NULL
 	);
-
-        DragAcceptFiles(hMainWindow, TRUE);
 
 	if ( !hMainWindow ) { return FALSE; }
 	if (strlen(lpszArgs) > 0) {
